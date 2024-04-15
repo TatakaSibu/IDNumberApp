@@ -13,10 +13,10 @@ public class Main {
                 if (isValidIDNumber(idNumber)) {
                     System.out.println("Valid ID number.");
                     int year = getYearOfBirth(idNumber);
-                    int month = getMonthOfBirth(idNumber);
+                    String month = getMonthOfBirth(idNumber);
                     int day = getDayOfBirth(idNumber);
                     String gender = checkGender(idNumber);
-                    String citizenship = getCitizenship(idNumber);
+                    String citizenship = checkCitizenship(idNumber);
 
                     System.out.println("Year of Birth: " + year +
                             "\nMonth of Birth: " + month +
@@ -50,11 +50,24 @@ public class Main {
             return 1900 + year;
         }
     }
-
-    public static int getMonthOfBirth(String idNumber) {
-        return Integer.parseInt(idNumber.substring(2, 4));
+    public static String getMonthOfBirth(String idNumber) {
+        int month = Integer.parseInt(idNumber.substring(2, 4));
+        return switch (month) {
+            case 1 -> "January";
+            case 2 -> "February";
+            case 3 -> "March";
+            case 4 -> "April";
+            case 5 -> "May";
+            case 6 -> "June";
+            case 7 -> "July";
+            case 8 -> "August";
+            case 9 -> "September";
+            case 10 -> "October";
+            case 11 -> "November";
+            case 12 -> "December";
+            default -> "Invalid month";
+        };
     }
-
     public static int getDayOfBirth(String idNumber) {
         return Integer.parseInt(idNumber.substring(4, 6));
     }
@@ -70,13 +83,21 @@ public class Main {
             return "Male";
         }
     }
+    public static String checkCitizenship(String idNumber) {
+        // Extract the citizenship digit
+        char citizenshipDigit = idNumber.charAt(12);
 
-    public static String getCitizenship(String idNumber) {
-        int citizenshipDigit = Integer.parseInt(idNumber.substring(10, 11));
-        return (citizenshipDigit == 0) ? "SA Citizen" : "Permanent Resident";
+        // Check citizenship
+        if (citizenshipDigit == '0') {
+            return "SA citizen";
+        } else if (citizenshipDigit == '1') {
+            return "Permanent resident";
+        } else {
+            return "Unknown citizenship";
+        }
     }
-}
 
+}
 class InvalidIDNumberException extends Exception {
     public InvalidIDNumberException(String message) {
         super(message);
