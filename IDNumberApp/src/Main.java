@@ -15,14 +15,14 @@ public class Main {
                     int year = getYearOfBirth(idNumber);
                     int month = getMonthOfBirth(idNumber);
                     int day = getDayOfBirth(idNumber);
-                    char gender = getGender(idNumber);
+                    String gender = checkGender(idNumber);
                     String citizenship = getCitizenship(idNumber);
 
-                    System.out.println("Year of Birth: " + year);
-                    System.out.println("Month of Birth: " + month);
-                    System.out.println("Day of Birth: " + day);
-                    System.out.println("Gender: " + gender);
-                    System.out.println("Citizenship: " + citizenship);
+                    System.out.println("Year of Birth: " + year +
+                            "\nMonth of Birth: " + month +
+                            "\nDay of Birth: " + day +
+                            "\nGender: " + gender +
+                            "\nCitizenship: " + citizenship);
                     validID = true;                                             // Set validID to true to exit the loop
                 } else {
                     throw new InvalidIDNumberException("Invalid ID number.");
@@ -37,28 +37,7 @@ public class Main {
     }
 
     public static boolean isValidIDNumber(String idNumber) {
-        if (idNumber.length() != 13) {
-            return false;
-        }
-
-        char checksum = calculateChecksum(idNumber.substring(0, 12));
-        return idNumber.charAt(12) == checksum;
-    }
-
-    public static char calculateChecksum(String idNumber) {
-        int sum = 0;
-        int[] weights = {1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2};
-
-        for (int i = 0; i < idNumber.length(); i++) {
-            int digit = Character.getNumericValue(idNumber.charAt(i));
-            int weighted = digit * weights[i];
-            sum += (weighted >= 10) ? weighted - 9 : weighted;
-        }
-
-        int remainder = sum % 10;
-        int checksum = (remainder == 0) ? 0 : 10 - remainder;
-
-        return Character.forDigit(checksum, 10);
+        return idNumber.length() == 13;
     }
 
     public static int getYearOfBirth(String idNumber) {
@@ -80,9 +59,16 @@ public class Main {
         return Integer.parseInt(idNumber.substring(4, 6));
     }
 
-    public static char getGender(String idNumber) {
-        int genderDigit = Integer.parseInt(idNumber.substring(6, 7));
-        return (genderDigit < 5) ? 'F' : 'M';
+    public static String checkGender(String idNumber) {                     // Extract the next 4 digits representing gender
+        String genderDigits = idNumber.substring(6, 10);
+        int genderValue = Integer.parseInt(genderDigits);                  // Convert the genderDigits string to an integer
+        int threshold = 5000;                                             // Define the threshold to differentiate between male and female
+
+        if (genderValue < threshold) {                                   // Check if the gender value is less than the threshold
+            return "Female";
+        } else {
+            return "Male";
+        }
     }
 
     public static String getCitizenship(String idNumber) {
