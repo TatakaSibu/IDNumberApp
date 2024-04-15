@@ -4,28 +4,33 @@ public class Main {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        System.out.println("Please enter your South African ID number:");
-        String idNumber = scanner.nextLine();
+        boolean validID = false;
+        while (!validID) {
+            System.out.println("Please enter your ID Number:");                             // SA ID Number
+            String idNumber = scanner.nextLine();
 
-        try {
-            if (isValidIDNumber(idNumber)) {
-                System.out.println("Valid ID number.");
-                int year = getYearOfBirth(idNumber);
-                int month = getMonthOfBirth(idNumber);
-                int day = getDayOfBirth(idNumber);
-                char gender = getGender(idNumber);
-                String citizenship = getCitizenship(idNumber);
+            try {
+                if (isValidIDNumber(idNumber)) {
+                    System.out.println("Valid ID number.");
+                    int year = getYearOfBirth(idNumber);
+                    int month = getMonthOfBirth(idNumber);
+                    int day = getDayOfBirth(idNumber);
+                    char gender = getGender(idNumber);
+                    String citizenship = getCitizenship(idNumber);
 
-                System.out.println("Year of Birth: " + year);
-                System.out.println("Month of Birth: " + month);
-                System.out.println("Day of Birth: " + day);
-                System.out.println("Gender: " + gender);
-                System.out.println("Citizenship: " + citizenship);
-            } else {
-                throw new InvalidIDNumberException("Invalid ID number.");
+                    System.out.println("Year of Birth: " + year);
+                    System.out.println("Month of Birth: " + month);
+                    System.out.println("Day of Birth: " + day);
+                    System.out.println("Gender: " + gender);
+                    System.out.println("Citizenship: " + citizenship);
+                    validID = true;                                             // Set validID to true to exit the loop
+                } else {
+                    throw new InvalidIDNumberException("Invalid ID number.");
+                }
+            } catch (InvalidIDNumberException e) {
+                System.out.println("Message: " + e.getMessage());
+                                                                                    // Continue to prompt for ID number
             }
-        } catch (InvalidIDNumberException e) {
-            System.out.println("Error: " + e.getMessage());
         }
 
         scanner.close();
@@ -80,13 +85,9 @@ public class Main {
         return (genderDigit < 5) ? 'F' : 'M';
     }
 
-    public static String getCitizenship(String idNumber) throws InvalidIDNumberException {
+    public static String getCitizenship(String idNumber) {
         int citizenshipDigit = Integer.parseInt(idNumber.substring(10, 11));
-        if (citizenshipDigit == 0) {
-            return "SA Citizen";
-        } else {
-            throw new InvalidIDNumberException("Not a South African citizen.");
-        }
+        return (citizenshipDigit == 0) ? "SA Citizen" : "Permanent Resident";
     }
 }
 
