@@ -85,7 +85,7 @@ public class Main {
     }
     public static String checkCitizenship(String idNumber) {
         // Extract the citizenship digit
-        char citizenshipDigit = idNumber.charAt(12);
+        char citizenshipDigit = idNumber.charAt(10);
 
         // Check citizenship
         if (citizenshipDigit == '0') {
